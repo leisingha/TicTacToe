@@ -25,10 +25,9 @@ Factory function to create objects:  Player -> (Player1, Player2), Cells
 
 module: 
 {
-Gameboard object contains gameboard array (which is a 2D array) which is also private.
+Gameboard object contains gameboard array (which is a 2D array) which is also private, modify cell value, print board
 
-GameController object to control the state of the game, keep track of turns, announce winner/loser or tie, updates screen (console in the first iteration) and add player.getmove() val to Gameboard object
-}
+GameController object to control the state of the game, keep track of turns, announce winner/loser or tie, play round
 
 Cell factory to create cell instances (9) that have states that change on player moves
 
@@ -36,4 +35,4 @@ Create Player factory and extend it to create HumanPlayer and ComputerPlayer fac
 HumanPlayer object should have a method prompt player for next move (X or O) | getmove()
 ComputerPlayer object  should have the logic to generate move based on Gameboard situation | generatemove()
 
-
+}
