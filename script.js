@@ -1,6 +1,6 @@
 function createPlayer (name) {
-    const turn = false;
-    const changeTurn = () => turn = !turn;
+    let turn = false;
+    const changeTurn = () => turn = (!turn);
     const isTurn = () => turn;
     return {name, changeTurn, isTurn};
 }
@@ -8,14 +8,14 @@ function createPlayer (name) {
 function createHumanPlayer (name){
     const user = createPlayer(name);
     const getPosition = () => {
-        const input = prompt('Pick Cell (format: [row][col])');
-        const match = input.match(/\[(\d+)\]\[(\d+)\]/);
+        const input = prompt('Pick Cell (format: X,Y)');
+        const match = input.match(/(\d+),(\d+)/);
         if (match) {
             const row = parseInt(match[1], 10);
             const col = parseInt(match[2], 10);
             return { row, col };
         } else {
-            alert('Invalid format. Please enter in the format [row][col]');
+            alert('Invalid format. Please enter in the format X,Y');
             return getPosition();
         }
     };
@@ -23,7 +23,7 @@ function createHumanPlayer (name){
 }
 
 function createComputerPlayer (name){
-    const {name, changeTurn, isTurn} = createPlayer(name);
+    const {turn, changeTurn, isTurn} = createPlayer(name);
     const getPosition = () => {
         const input = prompt('Pick Cell');
         return input;
@@ -32,7 +32,7 @@ function createComputerPlayer (name){
 }
 
 function createCell () {
-    const state = null;
+    let state = "";
 
     const addVal = (val) => state = val;
     const getState = () => state;
@@ -52,14 +52,18 @@ function GameBoard ()  {
         boardArray.push(row);
     }
 
-    const getBoard = () => console.log(boardArray);
+    const getBoard = () => {
+        boardArray.forEach(row => {
+            console.log(row.map(cell => cell.getState()));
+        });
+    };
 
-    const modifyCellX = (pos) => {
-        boardArray[pos].addVal('X');
+    const modifyCellX = (row,col) => {
+        boardArray[row][col].addVal('X');
     }
 
-    const modifyCellO = (val) => {
-        boardArray[pos].addVal('O');
+    const modifyCellO = (row,col) => {
+        boardArray[row][col].addVal('O');
     }
 
     function allCellEqual(outerArray) {
@@ -102,41 +106,49 @@ function GameBoard ()  {
 
 function gameController () {
     const player1 = createHumanPlayer('Lei');
-    const player2 = createComputerPlayer('AI');
+    const player2 = createHumanPlayer('Priyam');
+    
 
     const board = GameBoard();
 
-    const playGame = () => {
-        while (!board.isStreak){
-            playRound();
-        }
-    }
-
-   
-
     const playRound = () => {
         //p1 turn
+
+        const p1Input = player1.getPosition();
+        const p2Input = player2.getPosition();
+
         player1.changeTurn();
-        board.modifyCellX(player1.getPosition());
+        board.modifyCellX(p1Input.row, p1Input.col);
         player1.changeTurn();
         board.getBoard();
-        if (board.isStreak){
+        if (board.isStreak()){
             console.log('GAME OVER!!!');
         }
 
         //p2 turn
         player2.changeTurn();
-        board.modifyCellO(player2.getPosition());
+        board.modifyCellO(p2Input.row, p2Input.col);
         player2.changeTurn();
         board.getBoard();
-        if (board.isStreak){
+        if (board.isStreak()){
             console.log('GAME OVER!!!');
         }
 
     }
 
+    const playGame = () => {
+        board.getBoard()
+        playRound();
+    }
+
     return {playGame}
 }
+
+const game = gameController();
+
+// game.playGame();
+
+
 
 
     
