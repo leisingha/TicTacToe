@@ -70,11 +70,11 @@ function GameBoard ()  {
         let streak = false;
         outerArray.forEach(innerArray => {
             if(innerArray.every((cell) =>{
-                cell.getState() == 'X';
+                return cell.getState() == 'X';
             })){ 
                 streak = true;
             }else if(innerArray.every((cell) =>{
-                cell.getState() == 'O';
+                return cell.getState() == 'O';
             })){
                 streak = true;
             }
@@ -83,22 +83,22 @@ function GameBoard ()  {
     }
 
     const isStreak =() => {
-        let streak = false;
+    
         //check horizontal streak
-        streak = allCellEqual(boardArray);
+        let horizontalStreak = allCellEqual(boardArray);
 
         //check vertical streak
         let col1 = [boardArray[0][0], boardArray[1][0], boardArray[2][0]], col2 = [boardArray[0][1], boardArray[1][1], boardArray[2][1]], col3 = [boardArray[0][2], boardArray[1][2], boardArray[2][2]];
         const columns = [col1, col2, col3];
-        streak = allCellEqual(columns);
+        let verticalStreak = allCellEqual(columns);
 
         //check diagonal streak
         let diagonal1 = [boardArray[0][0], boardArray[1][1], boardArray[2][2]];
         let diagonal2 = [boardArray[0][2], boardArray[1][1], boardArray[2][0]];
         let diagonals = [diagonal1, diagonal2];
-        streak = allCellEqual(diagonals);
+        let diagonalStreak = allCellEqual(diagonals);
 
-        return streak;
+        return (horizontalStreak || verticalStreak || diagonalStreak)
     }
 
     return{getBoard, modifyCellX, modifyCellO, isStreak}
@@ -113,9 +113,7 @@ function gameController () {
 
     const playRound = () => {
         //p1 turn
-
         const p1Input = player1.getPosition();
-        const p2Input = player2.getPosition();
 
         player1.changeTurn();
         board.modifyCellX(p1Input.row, p1Input.col);
@@ -125,20 +123,30 @@ function gameController () {
             console.log('GAME OVER!!!');
         }
 
-        //p2 turn
-        player2.changeTurn();
-        board.modifyCellO(p2Input.row, p2Input.col);
-        player2.changeTurn();
-        board.getBoard();
         if (board.isStreak()){
-            console.log('GAME OVER!!!');
+            return;
+        }else{
+            //p2 turn
+            const p2Input = player2.getPosition();
+
+            player2.changeTurn();
+            board.modifyCellO(p2Input.row, p2Input.col);
+            player2.changeTurn();
+            board.getBoard();
+            if (board.isStreak()){
+                console.log('GAME OVER!!!');
+            }
         }
+
+        
 
     }
 
     const playGame = () => {
-        board.getBoard()
-        playRound();
+        board.getBoard();
+        while(!board.isStreak()){
+            playRound();
+        }
     }
 
     return {playGame}
