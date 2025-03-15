@@ -59,11 +59,24 @@ function GameBoard ()  {
     };
 
     const modifyCellX = (row,col) => {
-        boardArray[row][col].addVal('X');
+        if(boardArray[row][col].getState() == ""){
+            boardArray[row][col].addVal('X');
+            return true;
+        }else{
+            console.error('Cell is already occupied. Please Try again!');   
+            return false;    
+        }
+        
     }
 
     const modifyCellO = (row,col) => {
-        boardArray[row][col].addVal('O');
+        if(boardArray[row][col].getState() == ""){
+            boardArray[row][col].addVal('O');
+            return true;
+        }else{
+            console.error('Cell is already occupied. Please Try again!');
+            return false;
+        }
     }
 
     function allCellEqual(outerArray) {
@@ -107,35 +120,37 @@ function GameBoard ()  {
 function gameController () {
     const player1 = createHumanPlayer('Lei');
     const player2 = createHumanPlayer('Priyam');
+
+    const players = [player1, player2];
     
+    const playerMove = (player) =>{
+        const playerInput = player.getPosition();
+        player.changeTurn()
+
+        if (player == players[1]){
+            board.modifyCellO(playerInput.row, playerInput.col) ? player.changeTurn() : playerMove(player);
+        }else{
+            board.modifyCellX(playerInput.row, playerInput.col) ? player.changeTurn() : playerMove(player);
+        }
+        
+        board.getBoard();
+        if (board.isStreak()){
+            console.log('GAME OVER!!!');
+        }
+    }
 
     const board = GameBoard();
 
     const playRound = () => {
         //p1 turn
-        const p1Input = player1.getPosition();
+        playerMove(player1);
 
-        player1.changeTurn();
-        board.modifyCellX(p1Input.row, p1Input.col);
-        player1.changeTurn();
-        board.getBoard();
-        if (board.isStreak()){
-            console.log('GAME OVER!!!');
-        }
-
+        //forfiet p2 turn if steak exists
         if (board.isStreak()){
             return;
         }else{
             //p2 turn
-            const p2Input = player2.getPosition();
-
-            player2.changeTurn();
-            board.modifyCellO(p2Input.row, p2Input.col);
-            player2.changeTurn();
-            board.getBoard();
-            if (board.isStreak()){
-                console.log('GAME OVER!!!');
-            }
+            playerMove(player2);
         }
 
         
