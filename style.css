@@ -97,10 +97,9 @@ form button:active {
 }
 
 input[type=radio] {
-    border: 3px solid #d54d4d;
+    border: 5px solid #d54d4d;
     padding: 0.5em;
     -webkit-appearance: none;
-    filter: drop-shadow(2px 2px 0 var(--shadow-color));
     cursor: pointer;
     margin-right: 0.25rem;
 }
@@ -113,6 +112,9 @@ input[type=radio]:focus {
     outline: none;
 }
 
+.opt1, .opt2{
+    color: var(--primary-color);
+}
 
 
 
