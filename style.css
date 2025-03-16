@@ -16,7 +16,7 @@ body {
     font-family: var(--font-family);
     display: grid;
     grid-template-columns: 1fr 5fr 1fr;
-    grid-template-rows: 1fr 5fr;
+    grid-template-rows: 2fr 5fr;
     height: 100vh;
     background-color: var(--background-color);
 }
@@ -55,6 +55,11 @@ form {
     grid-template-rows: 1fr 1fr 1fr;
     font-size: 2rem;
     gap: 3rem;
+}
+
+form div > div{
+    display: flex;
+    align-items: center;
 }
 
 form h2 {
@@ -114,6 +119,7 @@ input[type=radio]:focus {
 
 .opt1, .opt2{
     color: var(--primary-color);
+    filter: drop-shadow(1px 1px var(--shadow-color));
 }
 
 
