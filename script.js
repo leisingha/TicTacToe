@@ -167,6 +167,12 @@ function gameController () {
     return {playGame}
 }
 
+function ScreenController(){
+    const game = gameController();
+
+    
+}
+
 const game = gameController();
 
 // game.playGame();

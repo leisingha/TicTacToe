@@ -6,8 +6,43 @@
     <title>Tic Tac Toe</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-    
+    <header>
+        <h1 class="font-style">Tic-Tac-Toe</h1>
+    </header>
+    <main>
+        <form action="">
+            <h2>Choose Players!</h2>
+            <div>
+                <h3>Player 1:</h3>
+                <div>
+                    <input type="radio" id="HumanChoice" name="player1" value="human">
+                    <label class="opt1" for="HumanChoice">Human</label>
+                </div>
+                <div>
+                    <input type="radio" id="ComputerChoice" name="player1" value="computer">
+                    <label class="opt2" for="ComputerChoice">Computer</label>
+                </div>
+            </div>
+            <div>
+                <h3>Player 2:</h3>
+                <div>
+                    <input type="radio" id="HumanChoice" name="player2" value="human">
+                    <label class="opt1" for="HumanChoice">Human</label>
+                </div>
+                <div>
+                    <input type="radio" id="ComputerChoice" name="player2" value="computer">
+                    <label class="opt2" for="ComputerChoice">Computer</label>
+                </div>
+            </div>
+            <div class="btn-container">
+                <button type="submit" >Ready!</button>
+            </div>
+        </form>
+    </main>
 </body>
 </html>
