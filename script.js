@@ -117,9 +117,9 @@ function GameBoard ()  {
     return{getBoard, modifyCellX, modifyCellO, isStreak}
 }
 
-function gameController () {
-    const player1 = createHumanPlayer('Lei');
-    const player2 = createHumanPlayer('Priyam');
+function gameController (player1, player2) {
+    // const player1 = createHumanPlayer('Lei');
+    // const player2 = createHumanPlayer('Priyam');
 
     const players = [player1, player2];
     
@@ -153,8 +153,6 @@ function gameController () {
             playerMove(player2);
         }
 
-        
-
     }
 
     const playGame = () => {
@@ -169,11 +167,37 @@ function gameController () {
 
 function ScreenController(){
     const game = gameController();
+    const form = document.querySelector('#playerType');
+
+    const grid = document.createElement('div');
+
+    const main = document.querySelector('main');
+
+
+    form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    const playerFirst = (data['player1'] == 'human') ? createHumanPlayer('Player 1') : createComputerPlayer('Player 1');
+    const playerSecond = (data['player2'] == 'human') ? createHumanPlayer('Player 2') : createComputerPlayer('Player 2');
+
+    gameController(playerFirst, playerSecond);
+    })
+
+    const resetForm = () =>{
+        main.removeChild(form);
+    }
+
 
     
 }
 
-const game = gameController();
+ScreenController();
+
+
+
+// const game = gameController();
 
 // game.playGame();
 
