@@ -1,34 +1,24 @@
-function createPlayer (name) {
-    let turn = false;
-    const changeTurn = () => turn = (!turn);
-    const isTurn = () => turn;
-    return {name, changeTurn, isTurn};
+function createPlayer (name, firstBool) {
+    const isFirst = () => firstBool;
+    return {name, isFirst};
 }
 
-function createHumanPlayer (name){
-    const user = createPlayer(name);
+function createHumanPlayer (name, firstBool){
+    const user = createPlayer(name, firstBool);
     const getPosition = () => {
-        const input = prompt('Pick Cell (format: X,Y)');
-        const match = input.match(/(\d+),(\d+)/);
-        if (match) {
-            const row = parseInt(match[1], 10);
-            const col = parseInt(match[2], 10);
-            return { row, col };
-        } else {
-            alert('Invalid format. Please enter in the format X,Y');
-            return getPosition();
-        }
+        const input = prompt('Pick Cell');
+        return input
     };
     return Object.assign({}, user, {getPosition});
 }
 
-function createComputerPlayer (name){
-    const {turn, changeTurn, isTurn} = createPlayer(name);
+function createComputerPlayer (name, firstBool){
+    const {isFirst} = createPlayer(name, firstBool);
     const getPosition = () => {
         const input = prompt('Pick Cell');
         return input;
     };
-    return {name, changeTurn, isTurn, getPosition};
+    return {name, isFirst, getPosition};
 }
 
 function createCell (i) {
@@ -55,30 +45,31 @@ function GameBoard ()  {
         boardArray.push(row);
     }
 
+    let cellArray = boardArray.flat();
+
     const getBoard = () => {
         boardArray.forEach(row => {
             console.log(row.map(cell => cell.getState()));
         });
     };
 
-    const modifyCellX = (row,col) => {
-        if(boardArray[row][col].getState() == ""){
-            boardArray[row][col].addVal('X');
-            return true;
+    const modifyCell = (player,cellID) => {
+        if(player.isFirst()){
+            if(cellArray[cellID].getState() == ""){
+                cellArray[cellID].addVal('X');
+                return true;
+            }else{
+                console.error('Cell is already occupied. Please Try again!');   
+                return false 
+            }
         }else{
-            console.error('Cell is already occupied. Please Try again!');   
-            return false;    
-        }
-        
-    }
-
-    const modifyCellO = (row,col) => {
-        if(boardArray[row][col].getState() == ""){
-            boardArray[row][col].addVal('O');
-            return true;
-        }else{
-            console.error('Cell is already occupied. Please Try again!');
-            return false;
+            if(cellArray[cellID].getState() == ""){
+                cellArray[cellID].addVal('O');
+                return true;
+            }else{
+                console.error('Cell is already occupied. Please Try again!');   
+                return false;    
+            }
         }
     }
 
@@ -117,23 +108,22 @@ function GameBoard ()  {
         return (horizontalStreak || verticalStreak || diagonalStreak)
     }
 
-    return{getBoard, modifyCellX, modifyCellO, isStreak}
+    return{getBoard, modifyCellX, modifyCellO, isStreak, modifyCell}
 }
 
 function gameController () {
-    const player1 = createHumanPlayer('Lei');
-    const player2 = createHumanPlayer('Priyam');
+    const player1 = createHumanPlayer('Lei', true);
+    const player2 = createHumanPlayer('Priyam', false);
 
     const players = [player1, player2];
     
     const playerMove = (player) =>{
         const playerInput = player.getPosition();
-        player.changeTurn()
 
         if (player == players[1]){
-            board.modifyCellO(playerInput.row, playerInput.col) ? player.changeTurn() : playerMove(player);
+            board.modifyCell(players[1], playerInput) ? null : playerMove(player);
         }else{
-            board.modifyCellX(playerInput.row, playerInput.col) ? player.changeTurn() : playerMove(player);
+            board.modifyCell(players[0], playerInput) ? null : playerMove(player);
         }
         
         board.getBoard();
