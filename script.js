@@ -31,13 +31,15 @@ function createComputerPlayer (name){
     return {name, changeTurn, isTurn, getPosition};
 }
 
-function createCell () {
+function createCell (i) {
     let state = "";
+    const id = i;
 
     const addVal = (val) => state = val;
     const getState = () => state;
+    const getId = () => id;
 
-    return {addVal, getState}
+    return {addVal, getState, getId}
 }
 
 
@@ -46,7 +48,8 @@ function GameBoard ()  {
     for (let i = 0; i < 3; i++){
         let row = [];
         for (let j = 0; j < 3; j++){
-            cell = createCell()
+            let interim = (i==0) ? 0 : (i==1) ? 2 : 5;
+            cell = createCell(j + interim)
             row.push(cell)
         }
         boardArray.push(row);
@@ -117,9 +120,9 @@ function GameBoard ()  {
     return{getBoard, modifyCellX, modifyCellO, isStreak}
 }
 
-function gameController (player1, player2) {
-    // const player1 = createHumanPlayer('Lei');
-    // const player2 = createHumanPlayer('Priyam');
+function gameController () {
+    const player1 = createHumanPlayer('Lei');
+    const player2 = createHumanPlayer('Priyam');
 
     const players = [player1, player2];
     
@@ -167,11 +170,26 @@ function gameController (player1, player2) {
 
 function ScreenController(){
     const game = gameController();
+
+    const board = GameBoard();
+
     const form = document.querySelector('#playerType');
 
     const grid = document.createElement('div');
 
     const main = document.querySelector('main');
+
+    for (let i = 0; i++; i<9){
+        const cell = document.createElement('div');
+        cell.classList.add('cell' + i);
+        cell.dataset.id = i;
+        cell.addEventListener('click', () =>{
+            
+        })
+        grid.appendChild(cell);
+    }
+
+    
 
 
     form.addEventListener('submit', (e) => {
@@ -182,7 +200,7 @@ function ScreenController(){
     const playerFirst = (data['player1'] == 'human') ? createHumanPlayer('Player 1') : createComputerPlayer('Player 1');
     const playerSecond = (data['player2'] == 'human') ? createHumanPlayer('Player 2') : createComputerPlayer('Player 2');
 
-    gameController(playerFirst, playerSecond);
+    game.playGame()
     })
 
     const resetForm = () =>{
@@ -197,7 +215,7 @@ ScreenController();
 
 
 
-// const game = gameController();
+const game = gameController();
 
 // game.playGame();
 
