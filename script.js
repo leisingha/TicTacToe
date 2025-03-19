@@ -108,24 +108,18 @@ function GameBoard ()  {
         return (horizontalStreak || verticalStreak || diagonalStreak)
     }
 
-    return{getBoard, modifyCellX, modifyCellO, isStreak, modifyCell}
+    return{getBoard, isStreak, modifyCell}
 }
 
 function gameController () {
-    const player1 = createHumanPlayer('Lei', true);
-    const player2 = createHumanPlayer('Priyam', false);
-
-    const players = [player1, player2];
+    // const player1 = createHumanPlayer('Lei', true);
+    // const player2 = createHumanPlayer('Priyam', false);
     
     const playerMove = (player) =>{
         const playerInput = player.getPosition();
 
-        if (player == players[1]){
-            board.modifyCell(players[1], playerInput) ? null : playerMove(player);
-        }else{
-            board.modifyCell(players[0], playerInput) ? null : playerMove(player);
-        }
-        
+        board.modifyCell(player, playerInput) ? null : playerMove(player);
+     
         board.getBoard();
         if (board.isStreak()){
             console.log('GAME OVER!!!');
@@ -134,24 +128,24 @@ function gameController () {
 
     const board = GameBoard();
 
-    const playRound = () => {
+    const playRound = (p1,p2) => {
         //p1 turn
-        playerMove(player1);
+        playerMove(p1);
 
         //forfiet p2 turn if steak exists
         if (board.isStreak()){
             return;
         }else{
             //p2 turn
-            playerMove(player2);
+            playerMove(p2);
         }
 
     }
 
-    const playGame = () => {
+    const playGame = (p1,p2) => {
         board.getBoard();
         while(!board.isStreak()){
-            playRound();
+            playRound(p1,p2);
         }
     }
 
@@ -179,25 +173,20 @@ function ScreenController(){
         grid.appendChild(cell);
     }
 
-    
-
-
     form.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
-    const playerFirst = (data['player1'] == 'human') ? createHumanPlayer('Player 1') : createComputerPlayer('Player 1');
-    const playerSecond = (data['player2'] == 'human') ? createHumanPlayer('Player 2') : createComputerPlayer('Player 2');
+    const playerFirst = (data['player1'] == 'human') ? createHumanPlayer('Player 1', true) : createComputerPlayer('Player 1', true);
+    const playerSecond = (data['player2'] == 'human') ? createHumanPlayer('Player 2', false) : createComputerPlayer('Player 2', false);
 
-    game.playGame()
+    game.playGame(playerFirst, playerSecond)
     })
 
     const resetForm = () =>{
         main.removeChild(form);
     }
-
-
     
 }
 
@@ -205,7 +194,6 @@ ScreenController();
 
 
 
-const game = gameController();
 
 // game.playGame();
 
