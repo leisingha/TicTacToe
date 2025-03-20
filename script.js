@@ -78,7 +78,7 @@ function GameBoard ()  {
             return;
         }
         const availableCellsID = availableCells.map((cell) => cell.getId());
-        // console.log(availableCellsID);
+
         const index = Math.floor(Math.random() * (availableCellsID.length));
 
         const cellID = availableCellsID[index];
@@ -129,7 +129,7 @@ function GameBoard ()  {
         return (horizontalStreak || verticalStreak || diagonalStreak)
     }
 
-    return{isStreak, modifyCell, allCellMarked, generateMove} //removed getBoard()
+    return{isStreak, modifyCell, allCellMarked, generateMove} 
 }
 
 function gameController () {
@@ -152,7 +152,7 @@ function gameController () {
         const player = ((numMoves%2) == 0) ? players[0] : players[1];
 
         if(player.isHuman()){
-            board.modifyCell(player, cellID) ? null : null; //playerMove(player);
+            board.modifyCell(player, cellID)
         }else{
             board.generateMove(player);
         }
@@ -169,6 +169,10 @@ function gameController () {
             domController.generateResult('tie');
         }
         numMoves++;
+
+        if(player.isHuman()){
+            setTimeout(() => playRound(), 1000);
+        }
     }
 
 
@@ -178,8 +182,6 @@ function gameController () {
 
 function ScreenController () {
     const game = gameController();
-
-    // const board = GameBoard();
 
     const form = document.querySelector('#playerType');
 
@@ -241,10 +243,10 @@ function ScreenController () {
                 break;
             case 'p2':
                 result.textContent = `Player 2 has won the game!`;
-                result.appendChild(robot);
+                result.appendChild(human2);
                 break;
             default:
-                result.textContent = 'The game is tie!'
+                result.textContent = 'The game is tied!'
                 result.appendChild(tie);
         }
 
