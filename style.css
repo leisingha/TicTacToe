@@ -123,6 +123,18 @@ input[type=radio]:focus {
     filter: drop-shadow(1px 1px var(--shadow-color));
 }
 
+.grid-container{
+    height: 50vh;
+    width: 50vw;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.grid-container div{
+    border: 1px solid black;
+}
+
 
 
 

@@ -5,20 +5,18 @@ function createPlayer (name, firstBool) {
 
 function createHumanPlayer (name, firstBool){
     const user = createPlayer(name, firstBool);
-    const getPosition = () => {
-        const input = prompt('Pick Cell');
-        return input
+    const getInfo= () => {
+        return `My name is ${name}!`
     };
-    return Object.assign({}, user, {getPosition});
+    return Object.assign({}, user, {getInfo});
 }
 
 function createComputerPlayer (name, firstBool){
     const {isFirst} = createPlayer(name, firstBool);
-    const getPosition = () => {
-        const input = prompt('Pick Cell');
-        return input;
+    const getInfo = () => {
+        return 'I am a computer!'
     };
-    return {name, isFirst, getPosition};
+    return {name, isFirst, getInfo};
 }
 
 function createCell (i) {
@@ -31,7 +29,6 @@ function createCell (i) {
 
     return {addVal, getState, getId}
 }
-
 
 function GameBoard ()  {
     let boardArray = []
@@ -112,44 +109,35 @@ function GameBoard ()  {
 }
 
 function gameController () {
-    // const player1 = createHumanPlayer('Lei', true);
-    // const player2 = createHumanPlayer('Priyam', false);
-    
-    const playerMove = (player) =>{
-        const playerInput = player.getPosition();
 
-        board.modifyCell(player, playerInput) ? null : playerMove(player);
+    let numMoves = 0;
+    const board = GameBoard();
+    let players = []
+
+    const setPlayers = (p1,p2) =>{
+        players = [p1,p2];
+    }
+
+    const playRound = (cellID) =>{
+
+        if(board.isStreak()){
+            return;
+        }
+
+        const player = ((numMoves%2) == 0) ? players[0] : players[1];
+        
+        board.modifyCell(player, cellID) ? null : playerMove(player);
      
         board.getBoard();
         if (board.isStreak()){
             console.log('GAME OVER!!!');
         }
+        numMoves++;
     }
 
-    const board = GameBoard();
 
-    const playRound = (p1,p2) => {
-        //p1 turn
-        playerMove(p1);
 
-        //forfiet p2 turn if steak exists
-        if (board.isStreak()){
-            return;
-        }else{
-            //p2 turn
-            playerMove(p2);
-        }
-
-    }
-
-    const playGame = (p1,p2) => {
-        board.getBoard();
-        while(!board.isStreak()){
-            playRound(p1,p2);
-        }
-    }
-
-    return {playGame}
+    return {playRound, setPlayers}
 }
 
 function ScreenController(){
@@ -160,42 +148,53 @@ function ScreenController(){
     const form = document.querySelector('#playerType');
 
     const grid = document.createElement('div');
+    grid.classList.add('grid-container');
 
     const main = document.querySelector('main');
 
-    for (let i = 0; i++; i<9){
-        const cell = document.createElement('div');
-        cell.classList.add('cell' + i);
-        cell.dataset.id = i;
-        cell.addEventListener('click', () =>{
-            
-        })
-        grid.appendChild(cell);
+    const createGrid = () =>{
+        for (let i = 0; i < 9; i++){
+            const cell = document.createElement('div');
+            cell.classList.add('cell' + i);
+            cell.dataset.id = i;
+            cell.addEventListener('click', () =>{
+                game.playRound(cell.dataset.id);
+            })
+            grid.appendChild(cell);
+        }
+
+        main.appendChild(grid);
     }
-
-    form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-
-    const playerFirst = (data['player1'] == 'human') ? createHumanPlayer('Player 1', true) : createComputerPlayer('Player 1', true);
-    const playerSecond = (data['player2'] == 'human') ? createHumanPlayer('Player 2', false) : createComputerPlayer('Player 2', false);
-
-    game.playGame(playerFirst, playerSecond)
-    })
 
     const resetForm = () =>{
         main.removeChild(form);
     }
-    
+
+    const markCell = (val, cellID) =>{
+        const mark = document.createElement('div');
+        const cross = document.createElement('img');
+        const circle = document.createElement('img')
+    }
+
+    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const formData = new FormData(form);
+                        const data = Object.fromEntries(formData.entries());
+
+                        const playerFirst = (data['player1'] == 'human') ? createHumanPlayer('Player 1', true) : createComputerPlayer('Player 1', true);
+                        const playerSecond = (data['player2'] == 'human') ? createHumanPlayer('Player 2', false) : createComputerPlayer('Player 2', false);
+                        game.setPlayers(playerFirst, playerSecond);
+
+                        resetForm();
+                        createGrid();       
+                        })
+
 }
 
 ScreenController();
 
 
 
-
-// game.playGame();
 
 
 
