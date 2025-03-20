@@ -132,8 +132,45 @@ input[type=radio]:focus {
 }
 
 .grid-container div{
-    border: 1px solid black;
+    border: 10px solid;
+    border-image: linear-gradient(135deg, var(--primary-color) 25%, var(--secondary-color) 25%, var(--secondary-color) 50%, var(--primary-color) 50%, var(--primary-color) 75%, var(--secondary-color) 75%) 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+/* Remove the outer borders */
+.grid-container div:nth-child(1),
+.grid-container div:nth-child(2),
+.grid-container div:nth-child(3) {
+    border-top: none;
+}
+
+.grid-container div:nth-child(1),
+.grid-container div:nth-child(4),
+.grid-container div:nth-child(7) {
+    border-left: none;
+}
+
+.grid-container div:nth-child(3),
+.grid-container div:nth-child(6),
+.grid-container div:nth-child(9) {
+    border-right: none;
+}
+
+.grid-container div:nth-child(7),
+.grid-container div:nth-child(8),
+.grid-container div:nth-child(9) {
+    border-bottom: none;
+}
+
+img {
+    height: 6rem;
+    width: 6rem;
+    filter: drop-shadow(5px 5px var(--shadow-color));
+}
+
+
 
 
 

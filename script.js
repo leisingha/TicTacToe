@@ -32,6 +32,7 @@ function createCell (i) {
 
 function GameBoard ()  {
     let boardArray = []
+
     for (let i = 0; i < 3; i++){
         let row = [];
         for (let j = 0; j < 3; j++){
@@ -54,6 +55,7 @@ function GameBoard ()  {
         if(player.isFirst()){
             if(cellArray[cellID].getState() == ""){
                 cellArray[cellID].addVal('X');
+                domController.markCell('X', cellID);
                 return true;
             }else{
                 console.error('Cell is already occupied. Please Try again!');   
@@ -62,6 +64,7 @@ function GameBoard ()  {
         }else{
             if(cellArray[cellID].getState() == ""){
                 cellArray[cellID].addVal('O');
+                domController.markCell('O', cellID);
                 return true;
             }else{
                 console.error('Cell is already occupied. Please Try again!');   
@@ -140,7 +143,7 @@ function gameController () {
     return {playRound, setPlayers}
 }
 
-function ScreenController(){
+function ScreenController () {
     const game = gameController();
 
     const board = GameBoard();
@@ -171,9 +174,15 @@ function ScreenController(){
     }
 
     const markCell = (val, cellID) =>{
-        const mark = document.createElement('div');
+        const cell = document.querySelector('.cell'+cellID)
         const cross = document.createElement('img');
-        const circle = document.createElement('img')
+        cross.setAttribute('src', 'assets/cross.svg')
+        const circle = document.createElement('img');
+        circle.setAttribute('src', 'assets/circle.svg')
+
+        
+        cell.appendChild((val=='X') ? cross : circle);
+        
     }
 
     form.addEventListener('submit', (e) => {
@@ -189,9 +198,11 @@ function ScreenController(){
                         createGrid();       
                         })
 
+    return {markCell}
+
 }
 
-ScreenController();
+const domController = ScreenController();
 
 
 
