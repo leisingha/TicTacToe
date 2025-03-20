@@ -5,18 +5,18 @@ function createPlayer (name, firstBool) {
 
 function createHumanPlayer (name, firstBool){
     const user = createPlayer(name, firstBool);
-    const getInfo= () => {
-        return `My name is ${name}!`
+    const isHuman = () => {
+        return true;
     };
-    return Object.assign({}, user, {getInfo});
+    return Object.assign({}, user, {isHuman});
 }
 
 function createComputerPlayer (name, firstBool){
     const {isFirst} = createPlayer(name, firstBool);
-    const getInfo = () => {
-        return 'I am a computer!'
+    const isHuman = () => {
+        return false;
     };
-    return {name, isFirst, getInfo};
+    return {name, isFirst, isHuman};
 }
 
 function createCell (i) {
@@ -27,7 +27,7 @@ function createCell (i) {
     const getState = () => state;
     const getId = () => id;
 
-    return {addVal, getState, getId}
+    return {addVal, getState, getId, id}
 }
 
 function GameBoard ()  {
@@ -36,20 +36,18 @@ function GameBoard ()  {
     for (let i = 0; i < 3; i++){
         let row = [];
         for (let j = 0; j < 3; j++){
-            let interim = (i==0) ? 0 : (i==1) ? 2 : 5;
+            let interim = (i==0) ? 0 : (i==1) ? 3 : 6;
             cell = createCell(j + interim)
             row.push(cell)
         }
         boardArray.push(row);
     }
 
-    let cellArray = boardArray.flat();
+    console.log(boardArray);
 
-    const getBoard = () => {
-        boardArray.forEach(row => {
-            console.log(row.map(cell => cell.getState()));
-        });
-    };
+
+
+    let cellArray = boardArray.flat();
 
     const modifyCell = (player,cellID) => {
         if(player.isFirst()){
@@ -71,6 +69,29 @@ function GameBoard ()  {
                 return false;    
             }
         }
+    }
+
+    const generateMove = (player) =>{
+        const availableCells = cellArray.filter((cell) => cell.getState() == "");
+        console.log(availableCells);
+        if(availableCells.length == 0){
+            return;
+        }
+        const availableCellsID = availableCells.map((cell) => cell.getId());
+        // console.log(availableCellsID);
+        const index = Math.floor(Math.random() * (availableCellsID.length));
+
+        const cellID = availableCellsID[index];
+
+        console.log(cellID, cellArray[cellID].getState());
+
+        modifyCell(player, cellID);
+    }
+
+    const allCellMarked = () =>{
+        return cellArray.every((cell) => {
+            return cell.getState() != "";
+        })
     }
 
     function allCellEqual(outerArray) {
@@ -108,7 +129,7 @@ function GameBoard ()  {
         return (horizontalStreak || verticalStreak || diagonalStreak)
     }
 
-    return{getBoard, isStreak, modifyCell}
+    return{isStreak, modifyCell, allCellMarked, generateMove} //removed getBoard()
 }
 
 function gameController () {
@@ -127,13 +148,25 @@ function gameController () {
             return;
         }
 
+
         const player = ((numMoves%2) == 0) ? players[0] : players[1];
+
+        if(player.isHuman()){
+            board.modifyCell(player, cellID) ? null : null; //playerMove(player);
+        }else{
+            board.generateMove(player);
+        }
         
-        board.modifyCell(player, cellID) ? null : playerMove(player);
+        
      
-        board.getBoard();
-        if (board.isStreak()){
-            console.log('GAME OVER!!!');
+        // board.getBoard();
+        if (board.isStreak() && ((numMoves%2) == 0)){
+            // console.log('GAME OVER!!!'); //Add result message!
+            domController.generateResult('p1');
+        }else if (board.isStreak() && ((numMoves%2) == 1)){
+            domController.generateResult('p2');
+        }else if(board.allCellMarked() && !board.isStreak()){
+            domController.generateResult('tie');
         }
         numMoves++;
     }
@@ -146,7 +179,7 @@ function gameController () {
 function ScreenController () {
     const game = gameController();
 
-    const board = GameBoard();
+    // const board = GameBoard();
 
     const form = document.querySelector('#playerType');
 
@@ -185,6 +218,40 @@ function ScreenController () {
         
     }
 
+    const generateResult = (val) =>{
+        const human = document.createElement('img');
+        human.setAttribute('src', 'assets/human.svg')
+
+        const human2 = document.createElement('img');
+        human2.setAttribute('src', 'assets/human2.svg')
+
+        const robot = document.createElement('img');
+        robot.setAttribute('src', 'assets/robot.svg')
+
+        const tie = document.createElement('img');
+        tie.setAttribute('src', 'assets/tie.svg')
+
+        const result = document.createElement('div');
+        result.classList.add('result');
+
+        switch (val){
+            case 'p1':
+                result.textContent = `Player 1 has won the game!`;
+                result.appendChild(human);
+                break;
+            case 'p2':
+                result.textContent = `Player 2 has won the game!`;
+                result.appendChild(robot);
+                break;
+            default:
+                result.textContent = 'The game is tie!'
+                result.appendChild(tie);
+        }
+
+        main.classList.add('change-layout')
+        main.appendChild(result);
+    }
+
     form.addEventListener('submit', (e) => {
                         e.preventDefault();
                         const formData = new FormData(form);
@@ -198,7 +265,7 @@ function ScreenController () {
                         createGrid();       
                         })
 
-    return {markCell}
+    return {markCell, generateResult}
 
 }
 

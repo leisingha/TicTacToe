@@ -55,6 +55,7 @@ form {
     grid-template-rows: 1fr 1fr 1fr;
     font-size: 2rem;
     gap: 3rem;
+    height: min-content;
 }
 
 form div > div{
@@ -168,6 +169,29 @@ img {
     height: 6rem;
     width: 6rem;
     filter: drop-shadow(5px 5px var(--shadow-color));
+}
+
+.result{
+    color: var(--primary-color);
+    filter: drop-shadow(4px 4px 0 var(--shadow-color));
+    font-size: 5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.result img{
+    filter: drop-shadow(1px 1px var(--shadow-color));
+    height: 5rem;
+}
+
+.change-layout{
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-start;
+    align-items: center;
+    margin-top: 0;
+    gap: 2rem;
 }
 
 
