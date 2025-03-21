@@ -97,7 +97,7 @@ form button, .restart-btn {
     cursor: pointer;
 }
 
-form button:active {
+form button:active, .restart-btn:active {
     transform: translate(0, 10px);
     filter: drop-shadow(0 0 0 var(--shadow-color));
 }
