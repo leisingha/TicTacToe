@@ -157,11 +157,7 @@ function gameController () {
             board.generateMove(player);
         }
         
-        
-     
-        // board.getBoard();
         if (board.isStreak() && ((numMoves%2) == 0)){
-            // console.log('GAME OVER!!!'); //Add result message!
             domController.generateResult('p1');
         }else if (board.isStreak() && ((numMoves%2) == 1)){
             domController.generateResult('p2');
@@ -170,7 +166,8 @@ function gameController () {
         }
         numMoves++;
 
-        if(player.isHuman()){
+        //enables auto computer move
+        if(player.isHuman() || players.every(player => !player.isHuman())){
             setTimeout(() => playRound(), 1000);
         }
     }
@@ -236,6 +233,13 @@ function ScreenController () {
         const result = document.createElement('div');
         result.classList.add('result');
 
+        const restart = document.createElement('button');
+        restart.textContent = 'Restart';
+        restart.classList.add('restart-btn');
+        restart.addEventListener('click', ()=>{
+            location.reload();
+        })
+
         switch (val){
             case 'p1':
                 result.textContent = `Player 1 has won the game!`;
@@ -252,6 +256,7 @@ function ScreenController () {
 
         main.classList.add('change-layout')
         main.appendChild(result);
+        main.append(restart);
     }
 
     form.addEventListener('submit', (e) => {

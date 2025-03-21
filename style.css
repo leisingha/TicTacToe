@@ -16,7 +16,7 @@ body {
     font-family: var(--font-family);
     display: grid;
     grid-template-columns: 1fr 5fr 1fr;
-    grid-template-rows: 2fr 5fr;
+    grid-template-rows: 1fr 5fr;
     height: 100vh;
     background-color: var(--background-color);
 }
@@ -85,7 +85,7 @@ form .btn-container {
     align-items: start;
 }
 
-form button {
+form button, .restart-btn {
     font-family: inherit;
     width: 120px;
     height: 40px;
